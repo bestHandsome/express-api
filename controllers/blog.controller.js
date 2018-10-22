@@ -4,13 +4,17 @@ function addBlog(req, res, next) {
   let blog = new Blog(
     {
       title: req.body.title,
-      content: req.body.content,
-      online: req.body.online
+      author: req.body.author,
+      body: req.body.body,
+      comments: req.body.comments,
+      isDelete: false,
+      tag: req.body.tag
     }
   );
   blog.save(function (err) {
-    if (err) return next(err);
-    else res.send('添加成功');
+    if (err) {
+      res.send('添加失败');
+    } else res.send('添加成功');
   })
 }
 
@@ -21,18 +25,20 @@ function getBlogs(req, res, next) {
   })
 }
 
-function deleteBlog(req, res, next) {
+function deleteBlog(req, res) {
    Blog.deleteOne({title: req.query.title}, err => {
-      if (err) return next(err);
-      else res.send('删除成功');
+      if (err) {
+        res.send('删除失败');
+      } else res.send('删除成功');
    })
 }
 
 function editBlog(req, res, next) {
   Blog.updateOne({title: '第一篇'},
     {$set: req.body}, err => {
-     if (err) return next(err);
-     else res.send('修改成功');
+     if (err) {
+       res.send('修改失败');
+     } else res.send('修改成功');
   })
 }
 

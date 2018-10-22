@@ -12,7 +12,7 @@ const BlogSchema = new Schema({
   }],
   date: {type: Date, default: Date.now},  //发布时间
   isDelete: Boolean,                        //是否删除
-  tags: [{type: String}]
+  tag: [{type: String}]
 });
 
 module.exports = mongoose.model('blog', BlogSchema);
