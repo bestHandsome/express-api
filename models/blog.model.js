@@ -11,8 +11,8 @@ const BlogSchema = new Schema({
     body: String
   }],
   date: {type: Date, default: Date.now},  //发布时间
-  isDelete: Boolean,                        //是否删除
+  isDelete: Boolean,                      //是否删除
   tag: [{type: String}]
-});
+}, {timestamps: {createdAt: 'created', updatedAt: 'updated'}});
 
 module.exports = mongoose.model('blog', BlogSchema);
