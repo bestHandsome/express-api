@@ -1,20 +1,23 @@
 const Note = require('../models/note.model');
 
 function addNote(req, res, next) {
-  const note = new Note(
-    {
-      title: req.body.title,
-      count: req.body.count,
-      url: req.body.url,
-      content: req.body.content
-    }
-  );
-  
-  note.save(err => {
-    if (err) {
-       next(err);
-       res.send('添加失败');
-    } else res.send('添加成功');
+  Note.find({}, (err, notes) => {
+    const num = notes.length > 0 ? notes[notes.length - 1].id + 1 : 1;
+    const note = new Note(
+      {
+        id: num,
+        title: req.body.title,
+        count: req.body.count,
+        url: req.body.url,
+        content: req.body.content
+      }
+    );
+    note.save(err => {
+      if (err) {
+        next(err);
+        res.send('添加失败');
+      } else res.send('添加成功');
+    })
   })
 }
 
@@ -29,7 +32,7 @@ function getNotes(req, res, next) {
 
 
 function deleteNote(req, res, next) {
-  Note.deleteone({title: req.query.title}, err => {
+  Note.deleteOne({id: req.query.id}, err => {
     if (err) {
       next(err);
       res.send('删除失败');
@@ -38,7 +41,7 @@ function deleteNote(req, res, next) {
 }
 
 function updateNote(req, res, next) {
-  Note.updateOne({title: ""}, {$set: req.body}, err => {
+  Note.updateOne({id: req.query.id}, {$set: req.body}, err => {
     if (err) {
       next(err);
       res.send('修改失败');

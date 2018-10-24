@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const NoteSchema = new Schema({
+  id: {type: Number, required: true},
   title: {type: String, maxlength: 100, required: true},
   count: {type: Number, required: true},
   url: {type: String},

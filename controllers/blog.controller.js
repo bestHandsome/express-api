@@ -1,22 +1,26 @@
 const Blog = require('../models/blog.model');
 
 function addBlog(req, res, next) {
-  const blog = new Blog(
-    {
-      title: req.body.title,
-      author: req.body.author,
-      body: req.body.body,
-      comments: req.body.comments,
-      isDelete: false,
-      tag: req.body.tag
-    }
-  );
-  blog.save(function (err) {
-    if (err) {
-      next(err);
-      res.send('添加失败');
-    } else res.send('添加成功');
-  })
+  Blog.find({}, (error, blogs) => {
+    const num  = blogs.length > 0 ? blogs[blogs.length - 1].id + 1 : 1;
+    const blog = new Blog(
+      {
+        id: num,
+        title: req.body.title,
+        author: req.body.author,
+        body: req.body.body,
+        comments: req.body.comments,
+        isDelete: false,
+        tag: req.body.tag
+      }
+    );
+    blog.save(function (err) {
+      if (err) {
+        next(err);
+        res.send('添加失败');
+      } else res.send('添加成功');
+    })
+  });
 }
 
 function getBlogs(req, res, next) {
@@ -29,7 +33,7 @@ function getBlogs(req, res, next) {
 }
 
 function deleteBlog(req, res, next) {
-   Blog.deleteOne({title: req.query.title}, err => {
+   Blog.deleteOne({id: req.query.id}, err => {
       if (err) {
         next(err);
         res.send('删除失败');
@@ -38,7 +42,7 @@ function deleteBlog(req, res, next) {
 }
 
 function editBlog(req, res, next) {
-  Blog.updateOne({title: '第一篇'},
+  Blog.updateOne({id: req.query.id},
     {$set: req.body}, err => {
      if (err) {
        next(err);
